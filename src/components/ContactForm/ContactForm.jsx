@@ -1,9 +1,29 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import css from './ContactForm.module.css';
 
-export const ContactForm = ({ userData, onChange, onSubmit }) => {
+export const ContactForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChange = event => {
+    const { name, value } = event.target;
+    if (name === 'name') {
+      setName(value);
+    } else if (name === 'number') {
+      setNumber(value);
+    }
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    onSubmit(name, number);
+    setName('');
+    setNumber('');
+  };
+
   return (
-    <form className={css.form} onSubmit={onSubmit}>
+    <form className={css.form} onSubmit={handleSubmit}>
       <label className={css.label} htmlFor="nameField">
         Name
       </label>
@@ -12,8 +32,8 @@ export const ContactForm = ({ userData, onChange, onSubmit }) => {
         id="nameField"
         type="text"
         name="name"
-        value={userData.name}
-        onChange={onChange}
+        value={name}
+        onChange={handleChange}
         placeholder="Name"
         pattern="^[a-zA-Zа-яА-Я]+(([' \\-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         required
@@ -26,8 +46,8 @@ export const ContactForm = ({ userData, onChange, onSubmit }) => {
         id="phoneField"
         type="tel"
         name="number"
-        value={userData.number}
-        onChange={onChange}
+        value={number}
+        onChange={handleChange}
         placeholder="Phone Number"
         pattern="\+?\d{1,4}?[ .\\-\\s]?\(?\d{1,3}?\)?[ .\\-\\s]?\d{1,4}[ .\\-\\s]?\d{1,4}[ .\\-\\s]?\d{1,9}"
         required
@@ -40,7 +60,5 @@ export const ContactForm = ({ userData, onChange, onSubmit }) => {
 };
 
 ContactForm.propTypes = {
-  userData: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
